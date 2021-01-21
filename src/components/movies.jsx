@@ -7,7 +7,7 @@ import { getGenres } from "../services/fakeGenreService";
 import { paginate } from "../utils/paginate";
 import _ from "lodash";
 
-function MoviesF() {
+function Movies() {
   const [mainMovies, setMovies] = useState([]);
   const [mainGenres, setGenres] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState([]);
@@ -20,36 +20,35 @@ function MoviesF() {
     const genres = [{ _id: "", name: "All Genres" }, ...getGenres()];
     setMovies(getMovies());
     setGenres(genres);
-  },[]);
+  }, []);
 
   // delete a certain movie
-  function handleDelete(movie) {
-    setMovies((prevMovie) => {
-      return prevMovie.filter((m) => m._id !== movie._id);
+  const handleDelete = (movie) => {
+    setMovies((prevMovies) => {
+      return prevMovies.filter((m) => m._id !== movie._id);
     });
-  }
+  };
   // To like or unlike
-  function handleLike(movie) {
-    console.log("like");
+  const handleLike = (movie) => {
     const movies = [...mainMovies];
     const index = movies.indexOf(movie);
     movies[index] = { ...movies[index] };
     movies[index].liked = !movies[index].liked;
     setMovies(movies);
-  }
+  };
 
   // When pagination button is pressed, state will be changed
-  const handlePageChange = page => {
+  const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
   // To handle genre change from list group
-  const handleGenreSelect = genre => {
+  const handleGenreSelect = (genre) => {
     setSelectedGenre(genre);
   };
 
   // Sorting
-  const handleSort = sortColumn => {
+  const handleSort = (sortColumn) => {
     setSortColumn(sortColumn);
   };
 
@@ -67,7 +66,7 @@ function MoviesF() {
     // filter the movies by genre
     const filtered =
       selectedGenre && selectedGenre._id
-        ? mainMovies.filter(m => m.genre._id === selectedGenre._id)
+        ? mainMovies.filter((m) => m.genre._id === selectedGenre._id)
         : mainMovies;
 
     // sort the movies according to the option available in the state
@@ -85,9 +84,12 @@ function MoviesF() {
   if (count === 0) {
     return <p>There are no movies in the database.</p>;
   } else {
-    
     // Get the movies form getPagedData function which returns filtered, sorted and paginated movies
     const { totalCount, data: movies } = getPagedData();
+    if (movies.length === 0) {
+      setCurrentPage((prevCurrentPage) => prevCurrentPage - 1);
+    }
+
     return (
       <div className="row">
         <div className="col-3">
@@ -118,4 +120,4 @@ function MoviesF() {
   }
 }
 
-export default MoviesF;
+export default Movies;
