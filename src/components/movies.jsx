@@ -87,7 +87,11 @@ function Movies() {
     // Get the movies form getPagedData function which returns filtered, sorted and paginated movies
     const { totalCount, data: movies } = getPagedData();
     if (movies.length === 0) {
-      setCurrentPage((prevCurrentPage) => prevCurrentPage - 1);
+      if (currentPage !== 0){
+        setCurrentPage((prevCurrentPage) => {
+            return prevCurrentPage - 1;
+        });
+      }
     }
 
     return (
